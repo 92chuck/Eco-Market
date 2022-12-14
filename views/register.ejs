@@ -1,0 +1,63 @@
+<div class="px-4 py-5 my-5 text-center">
+  <h1 class="display-5 fw-bold">Register Today!</h1>
+  <div class="col lg-6 mx-auto">
+    <p class="lead">
+      Browse amazingly fresh vegetables and get delivered! Fill our form to get
+      started
+    </p>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <% if (registerSucceeded.length !== 0) { %>
+  <div class="col-8 alert alert-success" role="alert">
+    <%- registerSucceeded %>
+  </div>
+  <% } %> <% if (registerFailed.length !== 0) { %>
+  <div class="col-8 alert alert-danger" role="alert">
+    <%- registerFailed %>
+  </div>
+  <% } %>
+  <div class="col-8">
+    <form method="POST" action="/register">
+      <div class="row g-3">
+        <div class="col-12">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="col-12">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="col-12">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

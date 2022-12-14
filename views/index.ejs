@@ -1,5 +1,4 @@
-
-<!-- main image and description -->
+<!-- main image and description start -->
 
 <div class="row flex-lg-row-reverse align-items-center g-5 py-4 mb-4">
   <div class="col-12 col-lg-6">
@@ -22,82 +21,94 @@
       greens.
     </p>
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-      <a href="" class="btn btn-primary btn-dark btn-lg px-4 me-md-2"
-        >Explore all vegetables</a
+      <a href="/products" class="btn btn-primary btn-dark btn-lg px-4 me-md-2"
+        >Explore All Vegetables</a
       >
-      <a href="" class="btn btn-outline-secondary btn-lg px-4 me-md-2"
-        >Explore green</a
+      <a href="/brands" class="btn btn-outline-secondary btn-lg px-4 me-md-2"
+        >Explore All Brands</a
       >
     </div>
   </div>
 </div>
 
-<!-- Categories -->
+<!-- main image and description end -->
 
-<div class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 py-4">
-  <a href="#" class="col text-center category__link">
-    <div class="category__img shadow">
-      <img src="/images/roots.jpeg" alt="roots" loading="lazy" />
-    </div>
-    <div class="pt-1">Roots</div>
-  </a>
-  <a href="#" class="col text-center category__link">
-    <div class="category__img shadow">
-      <img src="/images/leafy-greens.webp" alt="leafy-greens" loading="lazy" />
-    </div>
-    <div class="pt-1">Leafy Greens</div>
-  </a>
-  <a href="#" class="col text-center category__link">
+<!-- Categories start -->
+
+<div class="d-flex mb-2 align-items-center">
+  <h2>Categories</h2>
+  <a href="/categories" class="ms-auto">View All</a>
+</div>
+<div
+  class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 py-4 justify-content-center"
+>
+  <% if (typeof types !== 'undefined' && types.length > 0) { %> <%
+  types.forEach(type => { %>
+  <a href="/categories/<%= type.id %>" class="col text-center category__link">
     <div class="category__img shadow">
       <img
-        src="/images/edible-plant-stems.jpeg"
-        alt="edible-plant-stems"
+        src="/images/<%= type.name %>.jpeg"
+        alt="<%= type.name %>"
         loading="lazy"
       />
     </div>
-    <div class="pt-1">Edible Plant Stem</div>
+    <div class="pt-1"><%= type.name %></div>
   </a>
+  <% }) %> <% } else { %>
+  <p>No Categories found</p>
+  <% } %>
 </div>
 
-<!-- Latest -->
+<!-- Categories  end -->
+
+<!-- brands  start -->
+
+<div class="d-flex mb-2 align-items-center">
+  <h2>Brands</h2>
+  <a href="/brands" class="ms-auto">View All</a>
+</div>
+<div
+  class="row row-cols-2 row-cols-lg-6 g-2 g-lg-3 py-4 justify-content-center"
+>
+  <% if (typeof brands !== 'undefined' && brands.length > 0) { %> <%
+  brands.forEach(brand => { %>
+  <a href="/brands/<%= brand.id %>" class="col text-center category__link">
+    <div class="category__img shadow" style="height: 190px">
+      <img
+        src="/images/<%= brand.name %>.png"
+        alt="<%= brand.name %>"
+        loading="lazy"
+      />
+    </div>
+    <div class="pt-1"><%= brand.name %></div>
+  </a>
+  <% }) %> <% } else { %>
+  <p>No brands found</p>
+  <% } %>
+</div>
+
+<!-- brands  end -->
+
+<!-- Latest Products  start -->
 
 <section class="pb-4 pt-4">
   <div class="d-flex mb-2 align-items-center">
     <h2>Latest Products</h2>
-    <a href="#" class="ms-auto">View More</a>
+    <a href="/products" class="ms-auto">View More</a>
   </div>
-
-  <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
-    <a href="#" class="col text-center category__link">
+  <div class="conatiner row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+    <% if (typeof products !== 'undefined' && products.length > 0) { %> <%
+    products.forEach(product => { %>
+    <a href="/product/<%= product.id %>" class="col text-center category__link">
       <div class="category__img category__img--large shadow">
-        <img src="" alt="" loading="lazy" />
+        <img src="" alt="<%= product.name %>" loading="lazy" />
       </div>
-      <div class="pt-1">View All</div>
+      <div class="pt-1"><%= product.name %></div>
     </a>
-    <a href="#" class="col text-center category__link">
-      <div class="category__img category__img--large shadow">
-        <img src="" alt="" loading="lazy" />
-      </div>
-      <div class="pt-1">View All</div>
-    </a>
-    <a href="#" class="col text-center category__link">
-      <div class="category__img category__img--large shadow">
-        <img src="" alt="" loading="lazy" />
-      </div>
-      <div class="pt-1">View All</div>
-    </a>
-    <a href="#" class="col text-center category__link">
-      <div class="category__img category__img--large shadow">
-        <img src="" alt="" loading="lazy" />
-      </div>
-      <div class="pt-1">View All</div>
-    </a>
-    <a href="#" class="col text-center category__link">
-      <div class="category__img category__img--large shadow">
-        <img src="" alt="" loading="lazy" />
-      </div>
-      <div class="pt-1">View All</div>
-    </a>
+    <% }) %> <% } else { %>
+    <p>No products found</p>
+    <% } %>
   </div>
 </section>
 
+<!-- Latest Products  end -->

@@ -1,0 +1,22 @@
+<h1 class="pb-4">Explore Vegetables</h1>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">All Vegetables</li>
+  </ol>
+</nav>
+
+<div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 mb-4">
+  <% if (typeof products !== 'undefined' && products.length > 0) { %> <%
+  products.forEach(product => { %>
+  <a href="/product/<%= product.id %>" class="col text-center category__link">
+    <div class="category__img category__img--large shadow">
+      <img src="" alt="<%= product.name %>" loading="lazy" />
+    </div>
+    <div class="pt-1"><%= product.name %></div>
+  </a>
+  <% }) %> <% } else { %>
+  <p>No products found</p>
+  <% } %>
+</div>

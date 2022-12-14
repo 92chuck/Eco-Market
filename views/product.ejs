@@ -1,0 +1,65 @@
+<% if (product !== null) { %>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <%- product.name %>
+    </li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-12 col-md-4">
+    <img
+      src=""
+      class="img-fluid sticky-top"
+      style="top: 20px"
+      alt="<%- product.name %>"
+      loading="lazy"
+    />
+  </div>
+  <div class="col-12 col-md-8">
+    <div class="row">
+      <div class="col-12">
+        <h1><%- product.name %></h1>
+      </div>
+      <div class="col-12 mb-4">
+        <a
+          href="/categories/<%= product.type.id %>"
+          style="text-decoration: none; color: black"
+        >
+          <i class="bi bi-tag"></i> <%- product.type.name %></a
+        >
+      </div>
+      <div class="col-12 mb-4">
+        <a
+          href="/brands/<%= product.brand.id %>"
+          style="text-decoration: none; color: black"
+          ><i class="bi bi-tag"></i> <%- product.brand.name %></a
+        >
+      </div>
+      <div class="col-12 mb-4">
+        <button type="button" class="btn btn-success">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-cart-plus-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0z"
+            ></path>
+          </svg>
+          add to cart
+        </button>
+      </div>
+      <div class="col-12" style="white-space: pre-line">
+        <h4>Description</h4>
+        <%- product.name %> for healthy life. No Vegetables No life!
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
