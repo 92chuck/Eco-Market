@@ -3,6 +3,20 @@ const Brand = require('../models/Brand');
 const Product = require('../models/Product');
 
 /**
+ * Pagination helper function
+ */
+
+const pagination = (dataLength, limit, currPage) => {
+  let totalPages;
+  if (dataLength % limit !== 0) totalPages = Math.floor(dataLength / limit) + 1;
+  else totalPages = dataLength / limit;
+  let skipIdx = currPage - 1;
+  let previousPage = currPage - 1;
+  let nextPage = currPage + 1;
+  return [totalPages, skipIdx, previousPage, nextPage];
+};
+
+/**
  * Get Hompage
  */
 
@@ -46,11 +60,26 @@ exports.homepage = async (req, res) => {
 
 exports.products = async (req, res) => {
   try {
-    const products = await Product.find().populate('type').populate('brand');
+    const allProducts = await Product.find();
+
+    const [totalPages, skipIdx, previousPage, nextPage] = pagination(
+      allProducts.length,
+      9,
+      parseInt(req.query.page)
+    );
+
+    const products = await Product.find()
+      .populate('type')
+      .populate('brand')
+      .limit(9)
+      .skip(skipIdx * 9);
     res.status(200).render('allProducts', {
       title: `Eco Market - Vegetables`,
       products,
       isLogged: req.authenticated,
+      nextPage,
+      previousPage,
+      totalPages,
     });
   } catch (e) {
     console.error(e);
@@ -99,7 +128,7 @@ exports.productById = async (req, res) => {
 exports.productCategories = async (req, res) => {
   try {
     const types = await Type.find();
-    res.status(200).render('byCategories', {
+    res.status(200).render('Categories', {
       title: `Eco Market - Categories`,
       types,
       isLogged: req.authenticated,
@@ -121,13 +150,26 @@ exports.productCategories = async (req, res) => {
 exports.productByCategory = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const allProducts = await Product.find({ type: id });
+    const [totalPages, skipIdx, previousPage, nextPage] = pagination(
+      allProducts.length,
+      9,
+      parseInt(req.query.page)
+    );
+
     const products = await Product.find({ type: id })
       .populate('type')
-      .populate('brand');
+      .populate('brand')
+      .limit(9)
+      .skip(skipIdx * 9);
     res.status(200).render('byCategories', {
       title: `Eco Market - ${products[0].type.name}`,
       products,
       isLogged: req.authenticated,
+      totalPages,
+      previousPage,
+      nextPage,
     });
   } catch (e) {
     console.error(e);
@@ -146,7 +188,7 @@ exports.productByCategory = async (req, res) => {
 exports.productBrands = async (req, res) => {
   try {
     const brands = await Brand.find();
-    res.status(200).render('byBrands', {
+    res.status(200).render('brands', {
       title: `Eco Market - Brands`,
       brands,
       isLogged: req.authenticated,
@@ -168,13 +210,26 @@ exports.productBrands = async (req, res) => {
 exports.productByBrand = async (req, res) => {
   try {
     const { id } = req.params;
+    const allProducts = await Product.find({ brand: id });
+
+    const [totalPages, skipIdx, previousPage, nextPage] = pagination(
+      allProducts.length,
+      9,
+      parseInt(req.query.page)
+    );
+
     const products = await Product.find({ brand: id })
       .populate('type')
-      .populate('brand');
+      .populate('brand')
+      .limit(9)
+      .skip(skipIdx * 9);
     res.status(200).render('byBrands', {
       title: `Eco Market - ${products[0].brand.name}`,
       products,
       isLogged: req.authenticated,
+      totalPages,
+      previousPage,
+      nextPage,
     });
   } catch (e) {
     console.error(e);

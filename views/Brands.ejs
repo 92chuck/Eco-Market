@@ -1,0 +1,23 @@
+<h1 class="pb-4">Explore Brands</h1>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Brands</li>
+  </ol>
+</nav>
+
+<div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 mb-4">
+  <% brands.forEach(brand => { %>
+  <a href="/brands/<%= brand.id %>" class="col text-center category__link">
+    <div class="category__img shadow" style="height: 230px">
+      <img
+        src="/images/<%= brand.name %>.png"
+        alt="<%= brand.name %>"
+        loading="lazy"
+      />
+    </div>
+    <div class="pt-1"><%= brand.name %></div>
+  </a>
+  <% }) %>
+</div>

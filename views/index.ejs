@@ -21,7 +21,9 @@
       greens.
     </p>
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-      <a href="/products" class="btn btn-primary btn-dark btn-lg px-4 me-md-2"
+      <a
+        href="/products/?page=1"
+        class="btn btn-primary btn-dark btn-lg px-4 me-md-2"
         >Explore All Vegetables</a
       >
       <a href="/brands" class="btn btn-outline-secondary btn-lg px-4 me-md-2"
@@ -44,7 +46,10 @@
 >
   <% if (typeof types !== 'undefined' && types.length > 0) { %> <%
   types.forEach(type => { %>
-  <a href="/categories/<%= type.id %>" class="col text-center category__link">
+  <a
+    href="/categories/<%= type.id %>/?page=1"
+    class="col text-center category__link"
+  >
     <div class="category__img shadow">
       <img
         src="/images/<%= type.name %>.jpeg"
@@ -72,7 +77,10 @@
 >
   <% if (typeof brands !== 'undefined' && brands.length > 0) { %> <%
   brands.forEach(brand => { %>
-  <a href="/brands/<%= brand.id %>" class="col text-center category__link">
+  <a
+    href="/brands/<%= brand.id %>/?page=1"
+    class="col text-center category__link"
+  >
     <div class="category__img shadow" style="height: 190px">
       <img
         src="/images/<%= brand.name %>.png"
@@ -94,7 +102,7 @@
 <section class="pb-4 pt-4">
   <div class="d-flex mb-2 align-items-center">
     <h2>Latest Products</h2>
-    <a href="/products" class="ms-auto">View More</a>
+    <a href="/products/?page=1" class="ms-auto">View More</a>
   </div>
   <div class="conatiner row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
     <% if (typeof products !== 'undefined' && products.length > 0) { %> <%
