@@ -4,6 +4,8 @@ const path = require('path');
 const app = express();
 const flash = require('connect-flash');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const { validateToken } = require('./server/middleware/JWT');
 
 require('dotenv').config({ path: path.join(__dirname, '/.env') });
 
@@ -18,6 +20,7 @@ app.use(
   })
 );
 app.use(flash());
+app.use(cookieParser());
 
 app.set('layout', './layouts/main');
 app.set('view engine', 'ejs');
@@ -25,10 +28,11 @@ app.set('view engine', 'ejs');
 const routes = require('./server/routes/appRoutes');
 app.use('/', routes);
 
-app.all('*', (req, res) => {
-  res.status(400).json({
-    error: 'InvalidURI',
-    description: `The URI ${req.url} is not valid.`,
+app.all('*', validateToken, (req, res) => {
+  res.status(400).render('error', {
+    title: 'Eco Market - Error page',
+    error: `The URI ${req.url} is not valid.`,
+    isLogged: req.authenticated,
   });
 });
 

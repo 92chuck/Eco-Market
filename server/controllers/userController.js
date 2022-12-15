@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const SALT = parseInt(process.env.SALT);
+const { createTokens } = require('../middleware/JWT');
 
 /**
  * Register
@@ -14,9 +15,15 @@ exports.register = async (req, res) => {
       title: 'Eco Market - Register',
       registerSucceeded,
       registerFailed,
+      isLogged: req.authenticated,
     });
   } catch (e) {
-    res.status(500).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(500).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };
 
@@ -30,8 +37,15 @@ exports.registerPost = async (req, res) => {
       password: hasedPassword,
     });
 
+    const accessToken = createTokens(newUser);
+
     req.flash('registerSucceeded', 'User has been registered');
-    res.status(201).redirect('/register');
+    res
+      .status(201)
+      .cookie('token', accessToken, {
+        maxAge: 60 * 60 * 24,
+      })
+      .redirect('/register');
   } catch (e) {
     console.error(e);
     req.flash(
@@ -54,36 +68,96 @@ exports.login = async (req, res) => {
       title: 'Eco Market - Login',
       loginFailed,
       loginSucceeded,
+      isLogged: req.authenticated,
     });
   } catch (e) {
-    res.status(500).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(500).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };
 
 exports.loginPost = async (req, res) => {
   try {
-    const { emailorUsername, password } = req.body;
-    const user = await User.findOne({ username: emailorUsername });
+    const { email, username, password } = req.body;
+    let user;
+    if (email.length === 0) user = await User.findOne({ username });
+    if (username.length === 0) user = await User.findOne({ email });
     if (!user) {
-      const user = await User.findOne({ email: emailorUsername });
-      if (!user) {
-        req.flash('loginFailed', 'Login failed: Invalid email or username');
-        res.status(401).redirect('/login');
-      }
+      req.flash('loginFailed', 'Login failed: Invalid email or username');
+      res.status(401).redirect('/login');
+    }
+    const hasedPassword = user.password;
+    const match = await bcrypt.compare(password, hasedPassword);
+    if (!match) {
+      req.flash('loginFailed', 'Login failed: Invalid password');
+      res.status(401).redirect('/login');
     } else {
-      const hasedPassword = user.password;
-      const match = await bcrypt.compare(password, hasedPassword);
-      if (!match) {
-        req.flash('loginFailed', 'Login failed: Invalid password');
-        res.status(401).redirect('/login');
-      } else {
+      const accessToken = createTokens(user);
+
+      if (!user.isAdmin) {
         req.flash('loginSucceeded', 'User has been verified');
-        res.status(200).redirect('/login');
+        res
+          .status(200)
+          .cookie('token', accessToken, {
+            maxAge: 60 * 60 * 24,
+          })
+          .redirect('/login');
+      } else {
+        res
+          .status(200)
+          .cookie('token', accessToken, {
+            maxAge: 60 * 60 * 24,
+          })
+          .redirect('/admin');
       }
     }
   } catch (e) {
     console.error(e);
     req.flash('loginFailed', 'Login failed: Error Occured');
     res.status(500).redirect('/login');
+  }
+};
+
+/**
+ * Log out
+ */
+
+exports.logout = async (req, res) => {
+  try {
+    res.cookie('token', '', { maxAge: 1 });
+    res.redirect('/');
+  } catch (e) {
+    console.error(e);
+    res.status(500).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
+  }
+};
+
+/**
+ * Log out
+ */
+
+exports.admin = async (req, res) => {
+  try {
+    const users = await User.find().populate('favorites');
+    res.render('admin', {
+      title: 'Eco Market - Admin',
+      isLogged: req.authenticated,
+      users,
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };

@@ -38,6 +38,7 @@
           ><i class="bi bi-tag"></i> <%- product.brand.name %></a
         >
       </div>
+      <% if (isLogged) { %>
       <div class="col-12 mb-4">
         <button type="button" class="btn btn-success">
           <svg
@@ -52,9 +53,10 @@
               d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0z"
             ></path>
           </svg>
-          add to cart
+          add to favorites
         </button>
       </div>
+      <% } %>
       <div class="col-12" style="white-space: pre-line">
         <h4>Description</h4>
         <%- product.name %> for healthy life. No Vegetables No life!
@@ -62,4 +64,26 @@
     </div>
   </div>
 </div>
+<br />
+<section class="pb-4 pt-4">
+  <div class="d-flex mb-2 align-items-center">
+    <h2>From the same brand</h2>
+    <a href="/brands/<%= product.brand.id %>" class="ms-auto">View More</a>
+  </div>
+  <div class="conatiner row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+    <% if (typeof products !== 'undefined' && products.length > 0) { %> <%
+    products.forEach(product => { %>
+    <a href="/product/<%= product.id %>" class="col text-center category__link">
+      <div class="category__img category__img--large shadow">
+        <img src="" alt="<%= product.name %>" loading="lazy" />
+      </div>
+      <div class="pt-1"><%= product.name %></div>
+    </a>
+    <% }) %> <% } else { %>
+    <p>No products found</p>
+    <% } %>
+  </div>
+</section>
+<% } else { %>
+<p>No product found</p>
 <% } %>

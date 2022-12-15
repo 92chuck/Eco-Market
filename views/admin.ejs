@@ -1,0 +1,30 @@
+<h1 class="pb-4">Admin Page</h1>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Admin</li>
+  </ol>
+</nav>
+<div class="container my-5">
+  <div class="shadow-lg rounded-5">
+    <table class="table ailgn-middle">
+      <thead class="bg-light">
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Favorites</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (typeof users !== 'undefined' && users.length > 0) { %> <%
+        users.forEach(user => { %>
+        <tr>
+          <td><p><%- user.username %></p></td>
+          <td><p><%- user.email %></p></td>
+          <td><p><%- user.favorites %></p></td>
+        </tr>
+        <% }) %> <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

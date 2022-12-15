@@ -1,6 +1,9 @@
 <%- include('../partials/header.ejs') %>
 
-      <main><%- body -%></main>
+      <div class="layout-sidebar">
+        <main><%- body -%></main>
+        <aside><%- include('../partials/userSidebar.ejs') %></aside>
+      </div>
 
 <%- include('../partials/footer.ejs') %>
 

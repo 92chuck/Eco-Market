@@ -14,12 +14,10 @@
     <%- registerSucceeded %>
   </div>
   <% } %> <% if (registerFailed.length !== 0) { %>
-  <div class="col-8 alert alert-danger" role="alert">
-    <%- registerFailed %>
-  </div>
+  <div class="col-8 alert alert-danger" role="alert"><%- registerFailed %></div>
   <% } %>
   <div class="col-8">
-    <form method="POST" action="/register">
+    <form method="POST" action="/register" class="needs-validation" novalidate>
       <div class="row g-3">
         <div class="col-12">
           <label for="username" class="form-label">Username</label>
@@ -30,6 +28,10 @@
             class="form-control"
             required
           />
+          <div class="invalid-feedback">
+            Username must be greater than 4 and less than 10 characters with no
+            special characters
+          </div>
         </div>
 
         <div class="col-12">
@@ -41,6 +43,10 @@
             class="form-control"
             required
           />
+          <div class="invalid-feedback">
+            Email must be greater than 8 and less than 40 characters with no
+            special characters besides @
+          </div>
         </div>
 
         <div class="col-12">
@@ -52,6 +58,22 @@
             class="form-control"
             required
           />
+          <div class="invalid-feedback">
+            Password must contain upper and lowercase, number, and special
+            characters: length should be between 4 and 12
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label for="confirm" class="form-label">Confirm password</label>
+          <input
+            type="password"
+            name="confirm"
+            id="confirm"
+            class="form-control"
+            required
+          />
+          <div class="invalid-feedback">Password doesn't match</div>
         </div>
 
         <div class="col-12">
@@ -61,3 +83,5 @@
     </form>
   </div>
 </div>
+
+<script src="/scripts/register.js"></script>

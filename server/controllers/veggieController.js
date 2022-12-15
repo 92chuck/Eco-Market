@@ -8,18 +8,35 @@ const Product = require('../models/Product');
 
 exports.homepage = async (req, res) => {
   try {
-    const types = await Type.find();
-    const brands = await Brand.find();
+    const types = await Type.find().limit(5);
+    const brands = await Brand.find().limit(5);
     const products = await Product.find().limit(5);
 
-    res.status(200).render('index', {
-      title: 'Eco Market - Home',
-      types,
-      brands,
-      products,
-    });
+    if (req.authenticated) {
+      res.status(200).render('index', {
+        title: 'Eco Market - Home',
+        layout: '../views/layouts/sidebar',
+        types,
+        brands,
+        products,
+        isLogged: req.authenticated,
+      });
+    } else {
+      res.status(200).render('index', {
+        title: 'Eco Market - Home',
+        types,
+        brands,
+        products,
+        isLogged: req.authenticated,
+      });
+    }
   } catch (e) {
-    res.status(500).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(500).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };
 
@@ -30,11 +47,18 @@ exports.homepage = async (req, res) => {
 exports.products = async (req, res) => {
   try {
     const products = await Product.find().populate('type').populate('brand');
-    res
-      .status(200)
-      .render('allProducts', { title: `Eco Market - Vegetables`, products });
+    res.status(200).render('allProducts', {
+      title: `Eco Market - Vegetables`,
+      products,
+      isLogged: req.authenticated,
+    });
   } catch (e) {
-    res.status(500).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(500).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };
 
@@ -48,11 +72,23 @@ exports.productById = async (req, res) => {
     const product = await Product.findById(id)
       .populate('type')
       .populate('brand');
-    res
-      .status(200)
-      .render('product', { title: `Eco Market - ${product.name}`, product });
+    const products = await Product.find({ brand: product.brand._id })
+      .limit(5)
+      .populate('type')
+      .populate('brand');
+    res.status(200).render('product', {
+      title: `Eco Market - ${product.name}`,
+      product,
+      products,
+      isLogged: req.authenticated,
+    });
   } catch (e) {
-    res.status(422).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(422).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };
 
@@ -66,9 +102,15 @@ exports.productCategories = async (req, res) => {
     res.status(200).render('byCategories', {
       title: `Eco Market - Categories`,
       types,
+      isLogged: req.authenticated,
     });
   } catch (e) {
-    res.status(500).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(500).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };
 
@@ -85,9 +127,15 @@ exports.productByCategory = async (req, res) => {
     res.status(200).render('byCategories', {
       title: `Eco Market - ${products[0].type.name}`,
       products,
+      isLogged: req.authenticated,
     });
   } catch (e) {
-    res.status(422).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(422).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };
 
@@ -101,9 +149,15 @@ exports.productBrands = async (req, res) => {
     res.status(200).render('byBrands', {
       title: `Eco Market - Brands`,
       brands,
+      isLogged: req.authenticated,
     });
   } catch (e) {
-    res.status(500).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(500).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };
 
@@ -120,9 +174,15 @@ exports.productByBrand = async (req, res) => {
     res.status(200).render('byBrands', {
       title: `Eco Market - ${products[0].brand.name}`,
       products,
+      isLogged: req.authenticated,
     });
   } catch (e) {
-    res.status(422).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(422).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };
 
@@ -138,10 +198,17 @@ exports.searchProducts = async (req, res) => {
     })
       .populate('type')
       .populate('brand');
-    res
-      .status(200)
-      .render('search', { title: `Eco Market - Search}`, products });
+    res.status(200).render('search', {
+      title: 'Eco Market - Search',
+      products,
+      isLogged: req.authenticated,
+    });
   } catch (e) {
-    res.status(422).send({ message: e.message || 'Error Occured' });
+    console.error(e);
+    res.status(422).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
   }
 };

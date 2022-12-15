@@ -20,13 +20,13 @@ async function run() {
     //Reset database
     await Promise.all([
       User.collection.drop(),
-      Product.collection.drop(), 
+      Product.collection.drop(),
       Brand.collection.drop(),
       Type.collection.drop(),
     ]);
 
     //User
-    const userpasswordHash = await bcrypt.hash('123', SALT);
+    const userpasswordHash = await bcrypt.hash('User1@', SALT);
     const createUser = await User.create({
       username: 'user1',
       email: 'user1@gmail.com',
@@ -34,10 +34,10 @@ async function run() {
       isAdmin: false,
     });
     //Admin user
-    const adminpasswordHash = await bcrypt.hash('123', SALT);
+    const adminpasswordHash = await bcrypt.hash('Admin1@', SALT);
     const createAdminUser = await User.create({
-      username: 'admin',
-      email: 'admin@gmail.com',
+      username: 'admin1',
+      email: 'admin1@gmail.com',
       password: adminpasswordHash,
       isAdmin: true,
     });

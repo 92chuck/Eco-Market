@@ -41,3 +41,13 @@ a {
   width: 100%;
   object-fit: cover;
 }
+
+.layout-sidebar {
+  display: grid;
+  grid-template-columns: 2fr 0.5fr;
+}
+
+/* aside {
+  margin-left: 25px;
+  margin-top: 50px;
+} */

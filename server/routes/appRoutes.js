@@ -2,27 +2,33 @@ const express = require('express');
 const router = express.Router();
 const veggieController = require('../controllers/veggieController');
 const userController = require('../controllers/userController');
-
+const { validateToken, isAdmin } = require('../middleware/JWT');
 /**
- *  App Routes
+ *  Vegetable Routes
  */
 
-router.get('/', veggieController.homepage);
-router.get('/products', veggieController.products);
-router.get('/product/:id', veggieController.productById);
-router.get('/categories', veggieController.productCategories);
-router.get('/categories/:id', veggieController.productByCategory);
-router.get('/brands', veggieController.productBrands);
-router.get('/brands/:id', veggieController.productByBrand);
-router.post('/search', veggieController.searchProducts);
+router.get('/', validateToken, veggieController.homepage);
+router.get('/products', validateToken, veggieController.products);
+router.get('/product/:id', validateToken, veggieController.productById);
+router.get('/categories', validateToken, veggieController.productCategories);
+router.get(
+  '/categories/:id',
+  validateToken,
+  veggieController.productByCategory
+);
+router.get('/brands', validateToken, veggieController.productBrands);
+router.get('/brands/:id', validateToken, veggieController.productByBrand);
+router.post('/search', validateToken, veggieController.searchProducts);
 
 /**
- *  App Routes
+ *  User Routes
  */
 
-router.get('/register', userController.register);
-router.get('/login', userController.login);
-router.post('/register', userController.registerPost);
-router.post('/login', userController.loginPost);
+router.get('/register', validateToken, userController.register);
+router.get('/login', validateToken, userController.login);
+router.get('/logout', userController.logout);
+router.post('/register', validateToken, userController.registerPost);
+router.post('/login', validateToken, userController.loginPost);
+router.get('/admin', isAdmin, userController.admin);
 
 module.exports = router;
