@@ -9,7 +9,10 @@
 
 <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 mb-4">
   <% brands.forEach(brand => { %>
-  <a href="/brands/<%= brand.id %>" class="col text-center category__link">
+  <a
+    href="/brands/<%= brand.id %>/?page=1"
+    class="col text-center category__link"
+  >
     <div class="category__img shadow" style="height: 230px">
       <img
         src="/images/<%= brand.name %>.png"

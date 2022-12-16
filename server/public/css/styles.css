@@ -39,7 +39,8 @@ a {
 
 .category__img img {
   width: 100%;
-  object-fit: cover;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .layout-sidebar {
@@ -55,4 +56,14 @@ a {
 
 .pagination {
   margin-top: 7rem;
+}
+
+aside {
+  /* padding-left: 50px;
+  padding-top: 40px; */
+  overflow: hidden;
+}
+
+span:hover {
+  transform: scale(1.1);
 }

@@ -1,7 +1,7 @@
 const Type = require('../models/Type');
 const Brand = require('../models/Brand');
 const Product = require('../models/Product');
-
+const User = require('../models/User');
 /**
  * Pagination helper function
  */
@@ -27,6 +27,7 @@ exports.homepage = async (req, res) => {
     const products = await Product.find().limit(5);
 
     if (req.authenticated) {
+      const user = await User.findById(req.userId).populate('favorites');
       res.status(200).render('index', {
         title: 'Eco Market - Home',
         layout: '../views/layouts/sidebar',
@@ -34,6 +35,7 @@ exports.homepage = async (req, res) => {
         brands,
         products,
         isLogged: req.authenticated,
+        user,
       });
     } else {
       res.status(200).render('index', {
@@ -60,26 +62,113 @@ exports.homepage = async (req, res) => {
 
 exports.products = async (req, res) => {
   try {
-    const allProducts = await Product.find();
+    const types = await Type.find();
+    const brands = await Brand.find();
+    const brandsQueryStr = req.query.brands;
+    const typesQueryStr = req.query.types;
+
+    //Check if there's any query from request for filtering
+
+    let queryBrands;
+    let queryTypes;
+
+    if (brandsQueryStr) {
+      queryBrands = brandsQueryStr.split(';');
+    }
+    if (typesQueryStr) {
+      queryTypes = typesQueryStr.split(';');
+    }
+
+    //Check total products' quantity we need to send to the client for pagination
+
+    let totalProductLength;
+
+    if (brandsQueryStr && typesQueryStr) {
+      const result = await Product.find({
+        brand: [...queryBrands],
+        type: [...queryTypes],
+      });
+      totalProductLength = result.length;
+    } else if (brandsQueryStr && !typesQueryStr) {
+      const result = await Product.find({
+        brand: [...queryBrands],
+      });
+      totalProductLength = result.length;
+    } else if (!brandsQueryStr && typesQueryStr) {
+      const result = await Product.find({
+        type: [...queryTypes],
+      });
+      totalProductLength = result.length;
+    } else {
+      const result = await Product.find();
+      totalProductLength = result.length;
+    }
+
+    // Build some information for pagination
 
     const [totalPages, skipIdx, previousPage, nextPage] = pagination(
-      allProducts.length,
+      totalProductLength,
       9,
       parseInt(req.query.page)
     );
 
-    const products = await Product.find()
-      .populate('type')
-      .populate('brand')
-      .limit(9)
-      .skip(skipIdx * 9);
+    let products;
+    if (req.query.brands && req.query.types) {
+      products = await Product.find({
+        brand: [...queryBrands],
+        type: [...queryTypes],
+      })
+        .populate('type')
+        .populate('brand')
+        .limit(9)
+        .skip(skipIdx * 9);
+    } else if (req.query.brands && !req.query.types) {
+      products = await Product.find({
+        brand: [...queryBrands],
+      })
+        .populate('type')
+        .populate('brand')
+        .limit(9)
+        .skip(skipIdx * 9);
+    } else if (!req.query.brands && req.query.types) {
+      products = await Product.find({
+        type: [...queryTypes],
+      })
+        .populate('type')
+        .populate('brand')
+        .limit(9)
+        .skip(skipIdx * 9);
+    } else {
+      products = await Product.find()
+        .populate('type')
+        .populate('brand')
+        .limit(9)
+        .skip(skipIdx * 9);
+    }
+    const queryStrBuilder = (brandsQueryStr, typesQueryStr) => {
+      let result;
+      if (brandsQueryStr && typesQueryStr)
+        result = `&brands=${brandsQueryStr}&types=${typesQueryStr}`;
+      else if (brandsQueryStr && !typesQueryStr)
+        result = `&brands=${brandsQueryStr}`;
+      else if (brandsQueryStr && !typesQueryStr)
+        result = `&types=${typesQueryStr}`;
+      else result = ' ';
+      return result;
+    };
+
+    const queryStr = queryStrBuilder(brandsQueryStr, typesQueryStr);
+
     res.status(200).render('allProducts', {
       title: `Eco Market - Vegetables`,
       products,
+      types,
+      brands,
       isLogged: req.authenticated,
       nextPage,
       previousPage,
       totalPages,
+      queryStr,
     });
   } catch (e) {
     console.error(e);
@@ -105,17 +194,24 @@ exports.productById = async (req, res) => {
       .limit(5)
       .populate('type')
       .populate('brand');
+
+    let user;
+    if (req.authenticated) {
+      user = await User.findById(req.userId);
+    }
+
     res.status(200).render('product', {
       title: `Eco Market - ${product.name}`,
       product,
       products,
       isLogged: req.authenticated,
+      user,
     });
   } catch (e) {
     console.error(e);
     res.status(422).render('error', {
       title: 'Eco Market - Error page',
-      error: e,
+      error: 'No product found!',
       isLogged: req.authenticated,
     });
   }
@@ -137,7 +233,7 @@ exports.productCategories = async (req, res) => {
     console.error(e);
     res.status(500).render('error', {
       title: 'Eco Market - Error page',
-      error: e,
+      error: 'No Categories Found',
       isLogged: req.authenticated,
     });
   }
@@ -175,7 +271,7 @@ exports.productByCategory = async (req, res) => {
     console.error(e);
     res.status(422).render('error', {
       title: 'Eco Market - Error page',
-      error: e,
+      error: 'No Product found!',
       isLogged: req.authenticated,
     });
   }
@@ -197,7 +293,7 @@ exports.productBrands = async (req, res) => {
     console.error(e);
     res.status(500).render('error', {
       title: 'Eco Market - Error page',
-      error: e,
+      error: 'No Brands found',
       isLogged: req.authenticated,
     });
   }
@@ -235,7 +331,7 @@ exports.productByBrand = async (req, res) => {
     console.error(e);
     res.status(422).render('error', {
       title: 'Eco Market - Error page',
-      error: e,
+      error: 'No Products found',
       isLogged: req.authenticated,
     });
   }
@@ -258,6 +354,57 @@ exports.searchProducts = async (req, res) => {
       products,
       isLogged: req.authenticated,
     });
+  } catch (e) {
+    console.error(e);
+    res.status(422).render('error', {
+      title: 'Eco Market - Error page',
+      error: 'No Product found',
+      isLogged: req.authenticated,
+    });
+  }
+};
+
+/**
+ * Put Add Favorites
+ */
+
+exports.addFavorite = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { productId } = req.body;
+
+    const user = await User.findById(userId);
+    const userFavorites = user.favorites;
+    userFavorites.push(productId);
+
+    await user.updateOne({ favorites: userFavorites }, { new: true });
+    res.sendStatus(200);
+  } catch (e) {
+    console.error(e);
+    res.status(422).render('error', {
+      title: 'Eco Market - Error page',
+      error: e,
+      isLogged: req.authenticated,
+    });
+  }
+};
+
+/**
+ * Put Remove Favorites
+ */
+
+exports.removeFavorite = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { productId } = req.body;
+
+    const user = await User.findById(userId);
+    const userFavorites = user.favorites;
+    const idx = userFavorites.indexOf(productId);
+    userFavorites.splice(idx, 1);
+
+    await user.updateOne({ favorites: userFavorites }, { new: true });
+    res.sendStatus(200);
   } catch (e) {
     console.error(e);
     res.status(422).render('error', {

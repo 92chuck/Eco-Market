@@ -11,7 +11,7 @@
 <div class="row">
   <div class="col-12 col-md-4">
     <img
-      src=""
+      src="/images/productImages/<%= product.name %>.jpg"
       class="img-fluid sticky-top"
       style="top: 20px"
       alt="<%- product.name %>"
@@ -25,7 +25,7 @@
       </div>
       <div class="col-12 mb-4">
         <a
-          href="/categories/<%= product.type.id %>"
+          href="/categories/<%= product.type.id %>/?page=1"
           style="text-decoration: none; color: black"
         >
           <i class="bi bi-tag"></i> <%- product.type.name %></a
@@ -33,14 +33,15 @@
       </div>
       <div class="col-12 mb-4">
         <a
-          href="/brands/<%= product.brand.id %>"
+          href="/brands/<%= product.brand.id %>/?page=1"
           style="text-decoration: none; color: black"
           ><i class="bi bi-tag"></i> <%- product.brand.name %></a
         >
       </div>
-      <% if (isLogged) { %>
+      <input hidden id="productId" value="<%= product.id %>" />
+      <% if (isLogged && !user.favorites.includes(product.id)) { %>
       <div class="col-12 mb-4">
-        <button type="button" class="btn btn-success">
+        <button onclick="addFavorite()" type="button" class="btn btn-success">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -53,7 +54,25 @@
               d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0z"
             ></path>
           </svg>
-          add to favorites
+          add
+        </button>
+      </div>
+      <% } else if (isLogged && user.favorites.includes(product.id)) { %>
+      <div class="col-12 mb-4">
+        <button onclick="removeFavorite()" type="button" class="btn btn-danger">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-cart-plus-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zM9 5.5V7h1.5a.5.5 0 0 1 0 1H9v1.5a.5.5 0 0 1-1 0V8H6.5a.5.5 0 0 1 0-1H8V5.5a.5.5 0 0 1 1 0z"
+            ></path>
+          </svg>
+          remove
         </button>
       </div>
       <% } %>
@@ -68,14 +87,20 @@
 <section class="pb-4 pt-4">
   <div class="d-flex mb-2 align-items-center">
     <h2>From the same brand</h2>
-    <a href="/brands/<%= product.brand.id %>" class="ms-auto">View More</a>
+    <a href="/brands/<%= product.brand.id %>/?page=1" class="ms-auto"
+      >View More</a
+    >
   </div>
   <div class="conatiner row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
     <% if (typeof products !== 'undefined' && products.length > 0) { %> <%
     products.forEach(product => { %>
     <a href="/product/<%= product.id %>" class="col text-center category__link">
       <div class="category__img category__img--large shadow">
-        <img src="" alt="<%= product.name %>" loading="lazy" />
+        <img
+          src="/images/productImages/<%= product.name %>.jpg"
+          alt="<%= product.name %>"
+          loading="lazy"
+        />
       </div>
       <div class="pt-1"><%= product.name %></div>
     </a>
@@ -87,3 +112,5 @@
 <% } else { %>
 <p>No product found</p>
 <% } %>
+
+<script src="/scripts/product.js"></script>

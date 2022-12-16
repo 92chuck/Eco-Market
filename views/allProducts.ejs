@@ -1,9 +1,57 @@
 <h1 class="pb-4">Explore Vegetables</h1>
-
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/">Home</a></li>
     <li class="breadcrumb-item active" aria-current="page">All Vegetables</li>
+  </ol>
+</nav>
+
+<nav aria-label="breadcrumb">
+  <h6 class="pb-1">By brands :</h6>
+  <ol class="breadcrumb">
+    <% brands.forEach(brand => { %>
+    <li class="breadcrumb-item">
+      <input
+        class="form-check-input-brand"
+        type="checkbox"
+        value="<%= brand.id %>"
+        id="<%= brand.id %>"
+        <% if (queryStr.includes(brand.id)) { %>
+         checked
+        <% } %>/>
+      <label class="form-check-label" for="<%= brand.id %>">
+        <%= brand.name %>
+      </label>
+    </li>
+    <% }) %>
+  </ol>
+</nav>
+
+<nav aria-label="breadcrumb">
+  <div class="d-flex mb-2 align-items-center">
+    <h6>By categories : </h6>
+    <a
+      id="filterBtn"
+      class="ms-auto btn btn-primary btn-dark btn-sm px-4 me-md-2"
+      >Filter</a
+    >
+  </div>
+  <ol class="breadcrumb">
+    <% types.forEach(type => { %>
+    <li class="breadcrumb-item">
+      <input
+        class="form-check-input-type"
+        type="checkbox"
+        value="<%= type.id %>"
+        id="<%= type.id %>"
+       <% if (queryStr.includes(type.id)) { %>
+         checked
+        <% } %>/>
+      <label class="form-check-label" for="<%= type.id %>">
+        <%= type.name %>
+      </label>
+    </li>
+    <% }) %>
   </ol>
 </nav>
 
@@ -12,7 +60,11 @@
   products.forEach(product => { %>
   <a href="/product/<%= product.id %>" class="col text-center category__link">
     <div class="category__img category__img--large shadow">
-      <img src="" alt="<%= product.name %>" loading="lazy" />
+      <img
+        src="/images/productImages/<%= product.name %>.jpg"
+        alt="<%= product.name %>"
+        loading="lazy"
+      />
     </div>
     <div class="pt-1"><%= product.name %></div>
   </a>
@@ -28,13 +80,27 @@
     </li>
     <% } else { %>
     <li class="page-item">
+      <% if (queryStr !== ' ') { %>
+      <a
+        class="page-link"
+        href="/products/?page=<%= previousPage %><%= queryStr %>"
+        >Previous</a
+      >
+      <% } else { %>
       <a class="page-link" href="/products/?page=<%= previousPage %>"
         >Previous</a
       >
+      <% } %>
     </li>
     <% } %> <% for( let i = 1; i <= totalPages; i++ ) { %>
     <li class="page-item">
-      <a class="page-link" href="/products/?page=<%- i %>"><%- i %></a>
+      <% if (queryStr !== ' ') { %>
+      <a class="page-link" href="/products/?page=<%= i %><%= queryStr %>"
+        ><%- i %></a
+      >
+      <% } else { %>
+      <a class="page-link" href="/products/?page=<%= i %>"><%= i %></a>
+      <% } %>
     </li>
     <% } %> <% if (parseInt(nextPage) === parseInt(totalPages) + 1) { %>
     <li class="page-item" disabled>
@@ -42,8 +108,16 @@
     </li>
     <% } else { %>
     <li class="page-item">
+      <% if (queryStr !== ' ') { %>
+      <a class="page-link" href="/products/?page=<%= nextPage %><%= queryStr %>"
+        >Next</a
+      >
+      <% } else { %>
       <a class="page-link" href="/products/?page=<%= nextPage %>">Next</a>
+      <% } %>
     </li>
     <% } %>
   </ul>
 </nav>
+
+<script src="/scripts/allProducts.js"></script>

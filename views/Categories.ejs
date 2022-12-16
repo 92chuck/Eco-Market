@@ -9,8 +9,8 @@
 
 <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3 mb-4">
   <% types.forEach(type => { %>
-  <a href="/categories/<%= type.id %>" class="col text-center category__link">
-    <div class="category__img shadow">
+  <a href="/categories/<%= type.id %>/?page=1" class="col text-center category__link">
+    <div class="category__img shadow" style="height: 230px">
       <img
         src="/images/<%= type.name %>.jpeg"
         alt="<%= type.name %>"

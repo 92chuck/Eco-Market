@@ -19,7 +19,8 @@ router.get(
 router.get('/brands', validateToken, veggieController.productBrands);
 router.get('/brands/:id', validateToken, veggieController.productByBrand);
 router.post('/search', validateToken, veggieController.searchProducts);
-
+router.put('/addFavorite', validateToken, veggieController.addFavorite);
+router.put('/removeFavorite', validateToken, veggieController.removeFavorite);
 /**
  *  User Routes
  */

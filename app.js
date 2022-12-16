@@ -9,6 +9,7 @@ const { validateToken } = require('./server/middleware/JWT');
 
 require('dotenv').config({ path: path.join(__dirname, '/.env') });
 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './server/public')));
 app.use(expressLayouts);

@@ -43,7 +43,9 @@ exports.registerPost = async (req, res) => {
     res
       .status(201)
       .cookie('token', accessToken, {
-        maxAge: 60 * 60 * 24,
+        httpOnly: true,
+        secure: true,
+        maxAge: 60 * 60 * 24 * 30,
       })
       .redirect('/register');
   } catch (e) {
@@ -103,14 +105,18 @@ exports.loginPost = async (req, res) => {
         res
           .status(200)
           .cookie('token', accessToken, {
-            maxAge: 60 * 60 * 24,
+            httpOnly: true,
+            secure: true,
+            maxAge: 60 * 60 * 24 * 30,
           })
           .redirect('/login');
       } else {
         res
           .status(200)
           .cookie('token', accessToken, {
-            maxAge: 60 * 60 * 24,
+            httpOnly: true,
+            secure: true,
+            maxAge: 60 * 60 * 24 * 30,
           })
           .redirect('/admin');
       }
@@ -128,8 +134,7 @@ exports.loginPost = async (req, res) => {
 
 exports.logout = async (req, res) => {
   try {
-    res.cookie('token', '', { maxAge: 1 });
-    res.redirect('/');
+    res.clearCookie('token').redirect('/');
   } catch (e) {
     console.error(e);
     res.status(500).render('error', {
@@ -141,7 +146,7 @@ exports.logout = async (req, res) => {
 };
 
 /**
- * Log out
+ * admin
  */
 
 exports.admin = async (req, res) => {
