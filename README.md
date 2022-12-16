@@ -28,13 +28,13 @@ Below is a non-exhaustive list of technologies used throughout the project.
 
 If you want to explore with Eco Market, feel free to clone this repo! After cloning, please enter the following commands:
 
-Setup your own mongoDB database and paste into .env MongoDB_URL and JWT_KEY, SALT, PORT
+Create .env file with the followings (PORT, MONGO_URL, SALT, JWT_KEY)
 
 npm i
 npm run seed
 npm start
 
-Admin ID : admin1 & PW : Admin1@ 
+Admin ID : admin1 & PW : Admin1@
 Sign up or Sign in with ID : user1 & PW : User1@
 
 Runs the app in the development mode.
