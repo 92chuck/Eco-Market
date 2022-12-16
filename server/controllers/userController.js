@@ -152,10 +152,12 @@ exports.logout = async (req, res) => {
 exports.admin = async (req, res) => {
   try {
     const users = await User.find().populate('favorites');
+
     res.render('admin', {
       title: 'Eco Market - Admin',
       isLogged: req.authenticated,
       users,
+      isAdmin : req.isAdmin
     });
   } catch (e) {
     console.error(e);

@@ -1,4 +1,9 @@
-<span class="badge bg-pill bg-dark">Favorite Products</span>
+<div class="flex-wrap">
+  <span class="badge bg-pill bg-dark" style="width: 180px"
+    >Favorite Products</span
+  >
+</div>
+
 <div
   class="row row-cols-1 row-cols-md-1 g-2 g-lg-5 py-3 justify-content-md-start"
 >
@@ -19,10 +24,8 @@
     <span
       id="removeBtn"
       style="margin-left: 15px"
-      onclick="removeFavorite()"
       class="badge bg-pill bg-danger"
-      >-</span
-    >
+      >-</span>
   </div>
   <% }) %> <% } else { %>
   <p>No Favorite products</p>

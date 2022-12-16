@@ -124,3 +124,28 @@
 </section>
 
 <!-- Latest Products  end -->
+
+<section class="px-4 py-5 my-5 text-center">
+  <img
+    src="/images/juice.jpg"
+    class="d-block mx-auto mb-4 img-fluid"
+    alt="juice"
+    width="566"
+    height="208"
+    loading="lazy"
+  />
+  <h1 class="display-5 fw-bold">Eco Market makes healthy living easy.</h1>
+  <div class="col-lg-6 mx-auto">
+    <p class="lead mb-4">
+      Buy healthy ingredients from top-selling, organic brands at wholesale
+      prices.
+    </p>
+    <% if (!isLogged) { %>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+      <a href="/register" class="btn btn-primary btn-dark btn-lg"
+        >Register today</a
+      >
+    </div>
+    <% } %>
+  </div>
+</section>

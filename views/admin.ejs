@@ -7,7 +7,7 @@
 </nav>
 <div class="container my-5">
   <div class="shadow-lg rounded-5">
-    <table class="table ailgn-middle">
+    <table class="table ailgn-middle text-center">
       <thead class="bg-light">
         <tr>
           <th>Username</th>
@@ -20,9 +20,11 @@
         <% if (typeof users !== 'undefined' && users.length > 0) { %> <%
         users.forEach(user => { %>
         <tr>
-          <td><p><%- user.username %></p></td>
-          <td><p><%- user.email %></p></td>
-          <td><p><%- user.favorites %></p></td>
+          <td><span class="badge bg-dark"><%- user.username %></span></td>
+          <td><span class="badge bg-dark"><%- user.email %></span></td>
+          <td><% user.favorites.forEach(element => { %>
+              <span class="badge bg-success"><%- element.name -%></span>
+            <% }) %></td>
         </tr>
         <% }) %> <% } %>
       </tbody>
