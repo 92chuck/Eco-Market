@@ -10,18 +10,25 @@ const { createTokens } = require('../middleware/JWT');
 exports.register = async (req, res) => {
   try {
     const registerFailed = req.flash('registerFailed');
-    const registerSucceeded = req.flash('registerSucceeded');
-    res.render('register', {
-      title: 'Eco Market - Register',
-      registerSucceeded,
-      registerFailed,
-      isLogged: req.authenticated,
-    });
+
+    if (req.authenticated) {
+      res.status(403).render('error', {
+        title: 'Eco Market - Error page',
+        error: '403 Forbidden, Log out first to continue',
+        isLogged: req.autenticated,
+      });
+    } else {
+      res.render('register', {
+        title: 'Eco Market - Register',
+        registerFailed,
+        isLogged: req.authenticated,
+      });
+    }
   } catch (e) {
     console.error(e);
     res.status(500).render('error', {
       title: 'Eco Market - Error page',
-      error: e,
+      error: 'Unknown server error',
       isLogged: req.authenticated,
     });
   }
@@ -39,7 +46,6 @@ exports.registerPost = async (req, res) => {
 
     const accessToken = createTokens(newUser);
 
-    req.flash('registerSucceeded', 'User has been registered');
     res
       .status(201)
       .cookie('token', accessToken, {
@@ -47,7 +53,7 @@ exports.registerPost = async (req, res) => {
         secure: true,
         maxAge: 60 * 60 * 24 * 30,
       })
-      .redirect('/register');
+      .redirect('/');
   } catch (e) {
     console.error(e);
     req.flash(
@@ -65,18 +71,24 @@ exports.registerPost = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const loginFailed = req.flash('loginFailed');
-    const loginSucceeded = req.flash('loginSucceeded');
-    res.render('login', {
-      title: 'Eco Market - Login',
-      loginFailed,
-      loginSucceeded,
-      isLogged: req.authenticated,
-    });
+    if (req.authenticated) {
+      res.status(403).render('error', {
+        title: 'Eco Market - Error page',
+        error: '403 Forbidden, You are already logged in',
+        isLogged: req.autenticated,
+      });
+    } else {
+      res.render('login', {
+        title: 'Eco Market - Login',
+        loginFailed,
+        isLogged: req.authenticated,
+      });
+    }
   } catch (e) {
     console.error(e);
     res.status(500).render('error', {
       title: 'Eco Market - Error page',
-      error: e,
+      error: 'Unknown server error',
       isLogged: req.authenticated,
     });
   }
@@ -101,7 +113,6 @@ exports.loginPost = async (req, res) => {
       const accessToken = createTokens(user);
 
       if (!user.isAdmin) {
-        req.flash('loginSucceeded', 'User has been verified');
         res
           .status(200)
           .cookie('token', accessToken, {
@@ -109,7 +120,7 @@ exports.loginPost = async (req, res) => {
             secure: true,
             maxAge: 60 * 60 * 24 * 30,
           })
-          .redirect('/login');
+          .redirect('/');
       } else {
         res
           .status(200)
@@ -139,7 +150,7 @@ exports.logout = async (req, res) => {
     console.error(e);
     res.status(500).render('error', {
       title: 'Eco Market - Error page',
-      error: e,
+      error: 'Unknown server error',
       isLogged: req.authenticated,
     });
   }
@@ -157,13 +168,13 @@ exports.admin = async (req, res) => {
       title: 'Eco Market - Admin',
       isLogged: req.authenticated,
       users,
-      isAdmin : req.isAdmin
+      isAdmin: req.isAdmin,
     });
   } catch (e) {
     console.error(e);
     res.status(500).render('error', {
       title: 'Eco Market - Error page',
-      error: e,
+      error: 'Unknown server error',
       isLogged: req.authenticated,
     });
   }

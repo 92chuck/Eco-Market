@@ -9,11 +9,7 @@
 </div>
 
 <div class="row justify-content-center">
-  <% if (registerSucceeded.length !== 0) { %>
-  <div class="col-8 alert alert-success" role="alert">
-    <%- registerSucceeded %>
-  </div>
-  <% } %> <% if (registerFailed.length !== 0) { %>
+  <% if (registerFailed.length !== 0) { %>
   <div class="col-8 alert alert-danger" role="alert"><%- registerFailed %></div>
   <% } %>
   <div class="col-8">
@@ -85,4 +81,3 @@
 </div>
 
 <script src="/scripts/register.js"></script>
-

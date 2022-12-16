@@ -381,11 +381,17 @@ exports.productByBrand = async (req, res) => {
 exports.searchProducts = async (req, res) => {
   try {
     let { searchTerm } = req.body;
-    let products = await Product.find({
-      $text: { $search: searchTerm, $diacriticSensitive: true },
-    })
-      .populate('type')
-      .populate('brand');
+
+    const allProducts = await Product.find();
+    const products = allProducts.filter((product) => {
+      const productName = product.name.toLowerCase();
+      const searchStr = searchTerm.toLowerCase();
+
+      if (productName.includes(searchStr)) {
+        return product;
+      }
+    });
+
     res.status(200).render('search', {
       title: 'Eco Market - Search',
       products,
