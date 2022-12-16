@@ -34,7 +34,7 @@ npm i
 npm run seed
 npm start
 
-Admin ID : admin1 & PW : Admin1@
+Admin ID : admin1 & PW : Admin1@ 
 Sign up or Sign in with ID : user1 & PW : User1@
 
 Runs the app in the development mode.
