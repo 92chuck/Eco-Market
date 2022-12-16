@@ -1,4 +1,4 @@
-# Bullseye
+# Eco Market
 <em>E Commerce grocery store built to satisfy any vegetable craving</em>
 
 ## About Eco Market
