@@ -6,9 +6,6 @@
 
 Eco Market is an E Commerce grocery store for vegetables. Shop around for vegetables based on your brand and category preference. Don't want to checkout right away? No problem! Create an account and add items into your favorites. Sign in again later when you're ready to purchase!
 
-## Video walkthrough :movie_camera:
- https://youtu.be/goiehHkK3wc
-
 ## Key Features :key:
 
 - Create a user account
